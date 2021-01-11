@@ -1,0 +1,8 @@
+*.jpg
+*.png
+*.sqlite3
+*.db
+*.pyc
+/__pycache__/
+*.npy
+*.h5
