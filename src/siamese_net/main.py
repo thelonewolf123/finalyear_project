@@ -4,7 +4,7 @@ import numpy as np
 import time
 import os
 
-data_dimension = 48
+data_dimension = 128
 TRAIN = False
 
 x = input('You want to train the model? [y/n] ')
@@ -14,9 +14,10 @@ if x == 'y':
     TRAIN = True
 
 if TRAIN:
-    X1 = np.load('processed_data/x1.npy')
-    X2 = np.load('processed_data/x2.npy')
-    Y = np.load('processed_data/y.npy')
+    X1 = np.load('processed_data/x1.npy',allow_pickle=True)
+    X2 = np.load('processed_data/x2.npy',allow_pickle=True)
+    Y = np.load('processed_data/y.npy',allow_pickle=True)
+    print(X1.shape)
 
     X1 = X1.reshape((X1.shape[0], data_dimension**2)).astype(np.float32)
     X2 = X2.reshape((X2.shape[0], data_dimension**2)).astype(np.float32)

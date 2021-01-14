@@ -21,7 +21,7 @@ class Recognizer (object):
 
         # tf.logging.set_verbosity(tf.logging.ERROR)
 
-        self.__DIMEN = 64
+        self.__DIMEN = 128
 
         input_shape = (self.__DIMEN**2,)
         convolution_shape = (self.__DIMEN, self.__DIMEN,1)

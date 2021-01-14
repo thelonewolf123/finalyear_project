@@ -39,8 +39,7 @@ class MakePairs:
 
         index = random.randint(0, len(self.dir_list[obj_class])-1)
 
-        path = pathlib.Path(self.path) / \
-            self.keys[obj_index]/self.dir_list[obj_class][index]
+        path = pathlib.Path(self.path) / self.keys[obj_index]/self.dir_list[obj_class][index]
 
         image = face_recognition.load_image_file(path)
         face_loc = face_recognition.face_locations(image)
@@ -68,7 +67,7 @@ class MakePairs:
 
             image1, obj_class1 = self.get_image_array()
             
-            if negative == self.dataset_len//2:
+            if negative >= self.dataset_len//2:
                 image2, obj_class2 = self.get_image_array(obj_class1)
             else:
                 image2, obj_class2 = self.get_image_array()
@@ -93,12 +92,13 @@ class MakePairs:
         if not os.path.exists(self.new_path):
             os.mkdir(self.new_path)
 
-        np.save('{}/x1.npy'.format(self.new_path), self.sample_1)
-        np.save('{}/x2.npy'.format(self.new_path), self.sample_2)
-        np.save('{}/y.npy'.format(self.new_path), self.result)
+        np.save('{}/x1.npy'.format(self.new_path), np.asarray(self.sample_1,dtype=np.float32))
+        print(self.sample_1)
+        np.save('{}/x2.npy'.format(self.new_path), np.asarray(self.sample_2,dtype=np.float32))
+        np.save('{}/y.npy'.format(self.new_path), np.asanyarray(self.result,dtype=np.uint8))
 
 
-make_pairs = MakePairs(path='./face_dt', dim=64,dataset_len=400)
+make_pairs = MakePairs(path='./face_dt', dim=128,dataset_len=8)
 make_pairs.save_data()
 
 positive = 0
