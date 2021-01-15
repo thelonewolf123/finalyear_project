@@ -5,7 +5,7 @@ cap = cv2.VideoCapture('/home/lonewolf/Videos/Webcam/2020-12-24-091144.webm')
 
 # Create the haar cascade
 faceCascade = cv2.CascadeClassifier("cascade/frontalFace10/haarcascade_frontalface_alt2.xml")
-humanCasecade = cv2.CascadeClassifier("cascade/body10/haarcascade_upperbody.xml")
+# humanCasecade = cv2.CascadeClassifier("cascade/body10/haarcascade_upperbody.xml")
 padding = 5
 
 while(True):
@@ -17,7 +17,7 @@ while(True):
 
     # Detect faces in the image
     faces = faceCascade.detectMultiScale(gray, 1.3, 5)
-    humans = humanCasecade.detectMultiScale(gray,1.3,5)
+    # humans = humanCasecade.detectMultiScale(gray,1.3,5)
     # faces= face_recognition.face_locations(gray)
     print("Found {0} faces!".format(len(faces)))
 
@@ -26,9 +26,9 @@ while(True):
         cv2.rectangle(frame, (x+padding, y+padding),
                       (x+w+padding, y+h+padding), (0, 255, 0), 2)
 
-    for (x, y, w, h) in humans:
-        cv2.rectangle(frame, (x+padding, y+padding),
-                      (x+w+padding, y+h+padding), (0, 255, 0), 2)
+    # for (x, y, w, h) in humans:
+    #     cv2.rectangle(frame, (x+padding, y+padding),
+    #                   (x+w+padding, y+h+padding), (0, 255, 0), 2)
 
 
     # Display the resulting frame

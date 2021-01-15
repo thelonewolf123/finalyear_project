@@ -93,7 +93,7 @@ class MakePairs:
             os.mkdir(self.new_path)
 
         np.save('{}/x1.npy'.format(self.new_path), np.asarray(self.sample_1,dtype=np.float32))
-        print(self.sample_1)
+        # print(self.sample_1)
         np.save('{}/x2.npy'.format(self.new_path), np.asarray(self.sample_2,dtype=np.float32))
         np.save('{}/y.npy'.format(self.new_path), np.asanyarray(self.result,dtype=np.uint8))
 
