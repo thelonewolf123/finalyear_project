@@ -7,6 +7,7 @@ os.environ["KERAS_BACKEND"] = "plaidml.keras.backend"
 
 import numpy as np
 import keras
+import cv2
 import keras.backend as K
 from keras import models, optimizers, losses, activations, callbacks
 from keras.layers import *
@@ -21,7 +22,9 @@ class Recognizer (object):
 
         # tf.logging.set_verbosity(tf.logging.ERROR)
 
-        self.__DIMEN = 128
+        self.__DIMEN = 96
+        self.faceCascade = cv2.CascadeClassifier("C:\\Users\\hk471\\Documents\\Machine_learning\\finalyear_project\\src\\cascade\\frontalFace10\\haarcascade_frontalface_alt2.xml")
+
 
         input_shape = (self.__DIMEN**2,)
         convolution_shape = (self.__DIMEN, self.__DIMEN,1)
@@ -65,7 +68,7 @@ class Recognizer (object):
         self.__model = models.Model([input_x1, input_x2],outputs)
 
         self.__model.compile(loss=losses.binary_crossentropy,
-                             optimizer=optimizers.Adam(lr=0.0001))
+                             optimizer=optimizers.Adam(lr=0.0001), metrics=['accuracy'])
 
     def fit(self, X, Y,  hyperparameters):
         initial_time = time.time()
@@ -86,26 +89,25 @@ class Recognizer (object):
         print('Elapsed time acquired for {} epoch(s) -> {} {}'.format(
             hyperparameters['epochs'], eta, time_unit))
 
-    def prepare_images_from_dir(self, dir_path, flatten=True):
+    def prepare_images_from_dir(self, dir_path, padding=5, flatten=True):
         rgb_weights = [0.2989, 0.5870, 0.1140]
         images = list()
         images_names = os.listdir(dir_path)
         for imageName in images_names:
-            image = Image.open(dir_path + imageName)
-            resize_image = image.resize((self.__DIMEN, self.__DIMEN))
-            array = list()
-            for x in range(self.__DIMEN):
-                sub_array = list()
-                for y in range(self.__DIMEN):
-                    sub_array.append(resize_image.load()[x, y])
-                array.append(sub_array)
-            image_data = np.array(array)
-            grayscale_image = np.dot(image_data[..., :3], rgb_weights)
-            image = grayscale_image/255
-            image = np.array(np.reshape(
-                image, (self.__DIMEN, self.__DIMEN)))
-            
-            images.append(image)
+            image = cv2.imread(str(dir_path + imageName))
+            gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+            faces = self.faceCascade.detectMultiScale(gray, 1.3, 5)
+
+            if len(faces) == 1:
+                x, y, w, h = faces[0]
+                new_img = image[y+padding:y+h+padding, x+padding:x+w+padding]
+                image = Image.fromarray(new_img).resize([self.__DIMEN, self.__DIMEN])
+                image_data = np.array(image)
+                grayscale_image = np.dot(image_data[..., :3], rgb_weights)
+                image = grayscale_image/255
+                image = np.array(np.reshape(image, (self.__DIMEN, self.__DIMEN)))
+                
+                images.append(image)
 
         if flatten:
             images = np.array(images)
